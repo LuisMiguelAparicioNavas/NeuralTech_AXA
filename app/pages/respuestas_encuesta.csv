@@ -1,3 +1,3 @@
-Centro_Medico,Diagnóstico,Edad,Duración_Enfermedad,Síntomas,Género,Historial_Médico,Motivo_Consulta,Tratamiento_Recomendado,Actividad_Laboral,Gravedad,Sesiones_Necesarias,Sesiones_Solicitadas,Discrepancia_Sesiones,Legitimidad
-Centro A,Lumbalgia,0,0,Dolor lumbar,Masculino,Sin antecedentes,Dolor persistente,Fisioterapia,Oficinista,Leve,1,1,0,No legítimo
-Centro A,Lumbalgia,30,20,Dolor lumbar,Masculino,Fisioterapia previa,Dolor persistente,Fisioterapia,Deportista,Leve,1,1,0,Legítimo
+Centro_Medico,Diagnóstico,Edad,Duración_Enfermedad,Síntomas,Género,Historial_Médico,Motivo_Consulta,Tratamiento_Recomendado,Actividad_Laboral,Gravedad,Sesiones_Necesarias,Sesiones_Solicitadas,Discrepancia_Sesiones,Legitimidad,ID
+Centro A,Lumbalgia,0,0,Dolor lumbar,Masculino,Sin antecedentes,Dolor persistente,Fisioterapia,Oficinista,Leve,1,1,0,No legítimo,1.0
+Centro A,Lumbalgia,45,30,Rigidez en la espalda,Masculino,Cirugía previa,Dolor persistente,Fisioterapia,Oficinista,Moderada,10,9,-1,Legítimo,1.0

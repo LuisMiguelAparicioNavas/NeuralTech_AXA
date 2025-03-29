@@ -9,7 +9,7 @@ import torch.nn as nn
 
 # Función para guardar la respuesta
 def guardar_respuesta(datos):
-    archivo = "respuestas_encuesta.csv"
+    archivo = "./pages/respuestas_encuesta.csv"
     nuevo_dato = pd.DataFrame([datos])
 
     if os.path.exists(archivo):
@@ -132,7 +132,7 @@ if error_reconstruccion > threshold:
     datos_encuesta["Legitimidad"] = "No legítimo"
 else:
     datos_encuesta["Legitimidad"] = "Legítimo"
-
+datos_encuesta["ID"]= st.session_state['user_id']
 # Guardar los datos de la encuesta cuando el usuario presiona el botón
 if st.button("Guardar Encuesta"):
     guardar_respuesta(datos_encuesta)

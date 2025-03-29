@@ -3,7 +3,7 @@ import pandas as pd
 from streamlit_extras.card import card
 
 # Cargar datos
-df = pd.read_csv("respuestas_encuesta.csv", encoding="utf-8")
+df = pd.read_csv("./pages/respuestas_encuesta.csv", encoding="utf-8")
 
 st.title("Respuestas de Encuesta")
 
@@ -15,6 +15,7 @@ for _, row in df.iterrows():
         st.markdown(
             f"""
             <div style="background-color: {color}; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+                <b>ID_usuario:</b> {row['ID']}<br>
                 <b>Centro Médico:</b> {row['Centro_Medico']}<br>
                 <b>Diagnóstico:</b> {row['Diagnóstico']}<br>
                 <b>Edad:</b> {row['Edad']}<br>
