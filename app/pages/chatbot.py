@@ -39,4 +39,4 @@ def chatbot(patient_data, user_input):
     print("Welcome to the AI ChatBot! Type 'exit' to quit.")
     params = {**patient_data, "question": user_input}
     result = chain.invoke(params)
-    return "Bot: ", result
+    return result
