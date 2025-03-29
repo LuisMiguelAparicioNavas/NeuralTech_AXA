@@ -1,20 +1,28 @@
 import streamlit as st
 import pandas as pd
 import os
+import joblib
+import numpy as np
+import torch
+import torch.nn as nn
 
+
+# Función para guardar la respuesta
 def guardar_respuesta(datos):
     archivo = "respuestas_encuesta.csv"
     nuevo_dato = pd.DataFrame([datos])
-    
+
     if os.path.exists(archivo):
         df = pd.read_csv(archivo)
         df = pd.concat([df, nuevo_dato], ignore_index=True)
     else:
         df = nuevo_dato
-    
+
     df.to_csv(archivo, index=False)
     st.success("¡Encuesta guardada con éxito!")
 
+
+# Título de la aplicación
 st.title("Encuesta Médica")
 
 # Opciones predefinidas
@@ -32,8 +40,10 @@ diagnosticos = {
     "Osteoartritis": ["Dolor en articulaciones", "Rigidez", "Inflamación leve"]
 }
 generos = ["Masculino", "Femenino", "No binario"]
-historial_medico = ["Sin antecedentes", "Cirugía previa", "Uso crónico de analgésicos", "Historial de traumatismos", "Fisioterapia previa", "Antecedentes familiares"]
-motivos_consulta = ["Dolor persistente", "Dificultad para trabajar", "Recomendado por médico", "Evaluación de síntomas", "Consulta de rutina", "Empeoramiento reciente"]
+historial_medico = ["Sin antecedentes", "Cirugía previa", "Uso crónico de analgésicos", "Historial de traumatismos",
+                    "Fisioterapia previa", "Antecedentes familiares"]
+motivos_consulta = ["Dolor persistente", "Dificultad para trabajar", "Recomendado por médico", "Evaluación de síntomas",
+                    "Consulta de rutina", "Empeoramiento reciente"]
 tratamientos = ["Fisioterapia", "Medicamentos", "Cirugía", "Rehabilitación", "Ejercicios", "Terapia ocupacional"]
 actividad_laboral = ["Oficinista", "Obrero", "Ama de casa", "Deportista", "Jubilado", "Estudiante"]
 
@@ -58,20 +68,14 @@ datos_encuesta = {
 
 datos_encuesta["Discrepancia_Sesiones"] = datos_encuesta["Sesiones_Solicitadas"] - datos_encuesta["Sesiones_Necesarias"]
 
-import os
-import pandas as pd
-import numpy as np
-import joblib
-import torch
-import torch.nn as nn
-
-# Directorio donde están los archivos guardados
-output_dir = "modelo_entrenado"
+# Ajustar la ruta al directorio modelo_entrenado
+output_dir = os.path.join(os.path.dirname(__file__), '..', 'modelo_entrenado')
 
 # Cargar LabelEncoders, StandardScaler y umbral
 label_encoders = joblib.load(os.path.join(output_dir, "label_encoders.pkl"))
 scaler = joblib.load(os.path.join(output_dir, "scaler.pkl"))
 threshold = np.load(os.path.join(output_dir, "threshold.npy"))
+
 
 # Definir el modelo Autoencoder (debe coincidir con el modelo entrenado)
 class Autoencoder(nn.Module):
@@ -92,6 +96,7 @@ class Autoencoder(nn.Module):
         decoded = self.decoder(encoded)
         return decoded
 
+
 # Cargar el modelo entrenado
 model_path = os.path.join(output_dir, "autoencoder_model.pth")
 input_dim = scaler.mean_.shape[0]  # Obtener la dimensión de entrada desde el scaler
@@ -99,15 +104,18 @@ autoencoder = Autoencoder(input_dim)
 autoencoder.load_state_dict(torch.load(model_path))
 autoencoder.eval()
 
+# Convertir datos_encuesta a un DataFrame de pandas
+df_datos_encuesta = pd.DataFrame([datos_encuesta])
 
 # Aplicar Label Encoding a las columnas categóricas (Manejo de valores desconocidos con -1)
-for column in datos_encuesta.columns:
+for column in df_datos_encuesta.columns:
     if column in label_encoders:  # Solo si la columna tiene un LabelEncoder guardado
         le = label_encoders[column]
-        datos_encuesta[column] = datos_encuesta[column].apply(lambda x: le.transform([x])[0] if x in le.classes_ else -1)
+        df_datos_encuesta[column] = df_datos_encuesta[column].apply(
+            lambda x: le.transform([x])[0] if x in le.classes_ else -1)
 
 # Aplicar escalado
-datos_encuesta_scaled = scaler.transform(datos_encuesta)
+datos_encuesta_scaled = scaler.transform(df_datos_encuesta)
 
 # Convertir a tensor
 datos_encuesta_tensor = torch.tensor(datos_encuesta_scaled, dtype=torch.float32)
@@ -125,5 +133,6 @@ if error_reconstruccion > threshold:
 else:
     datos_encuesta["Legitimidad"] = "Legítimo"
 
+# Guardar los datos de la encuesta cuando el usuario presiona el botón
 if st.button("Guardar Encuesta"):
     guardar_respuesta(datos_encuesta)
