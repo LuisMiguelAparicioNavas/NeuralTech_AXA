@@ -1,8 +1,20 @@
 import streamlit as st
+import time
 import pandas as pd
+import os
 
-USERS_FILE = './Data/usuarios.csv'
+# Ruta del archivo de usuarios dentro de la carpeta 'app/Data'
+USERS_FILE = '../Data/usuarios.csv'
 
+# Splash Screen
+if 'splash_shown' not in st.session_state:
+    # Ruta de la imagen dentro de 'app/Data'
+    st.image('../Data/AxaLogo.png', use_column_width=True)
+    time.sleep(2)
+    st.session_state.splash_shown = True
+    st.rerun()  # Reemplazado
+
+# Página de bienvenida después del Splash
 st.title("Inicio de Sesión")
 # Cambiar 'usuario' a 'correo' para pedir el correo electrónico
 email = st.text_input("Correo electrónico")
@@ -30,3 +42,6 @@ if col1.button("Iniciar sesión"):
     if col2.button("Registrarse"):
         st.session_state.register = True
         st.rerun()  # Reemplazado
+    
+
+
