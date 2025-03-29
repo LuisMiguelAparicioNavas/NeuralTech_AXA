@@ -1,4 +1,8 @@
 import streamlit as st
+import pandas as pd
+
+USERS_FILE = './Data/usuarios.csv'
+
 st.title("Inicio de Sesión")
 # Cambiar 'usuario' a 'correo' para pedir el correo electrónico
 email = st.text_input("Correo electrónico")
