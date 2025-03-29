@@ -9,7 +9,7 @@ st.title("Respuestas de Encuesta")
 
 # Mostrar cada fila en tarjetas
 for _, row in df.iterrows():
-    color = "#ffcccc" if row["Legitimidad"].strip().lower() == "No legítimo" else "#ccffcc"
+    color = "#ffcccc" if row["Legitimidad"] == "No legítimo" else "#ccffcc"
     
     with st.container():
         st.markdown(
